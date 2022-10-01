@@ -1,42 +1,39 @@
-from asyncio import constants
 import random
 
 
-instances = []
+def run_instance(numbers_of_boxes, tactic):
+    results = []
 
+    boxes = list(range(0, numbers_of_boxes))
+    random.shuffle(boxes)
 
-class Prisoner:
-    def __init__(self):
-        self.id = 1
+    for id in range(0, numbers_of_boxes):
+        found_id = False
 
-    def random_tactic(boxes):
-        print("RANDOM TACTIC!")
-
-
-class Instance:
-    def __init__(self):
-        self.prisoners = []
-        self.boxes = {}
-        self.survived = None
-
-        for i in range(0, 9):
-            self.prisoners.append(Prisoner())
-
-        box_numbers = list(range(0, 9))
-        random.shuffle(box_numbers)
-
-        for i in range(0, 9):
-            self.boxes[i] = box_numbers[i]
-
-    def run(self, tactic):
-        print(tactic)
         match tactic:
-            case "random":
-                print(self.prisoners.id)
-                # self.prisoners[0].random_tactic(self.boxes)
+            case "pick_at_random":
+                box_picks = boxes
+                random.shuffle(box_picks)
 
+                for box_pick_id in range(0, numbers_of_boxes // 2):
+                    if box_picks[box_pick_id] == id:
+                        found_id = True
+            case "follow_the_number_trail":
+                next_box_pick_id = id
 
-instances.append(Instance())
-instance1 = Instance()
+                for box_pick in range(0, numbers_of_boxes // 2):
+                    if boxes[next_box_pick_id] == id:
+                        found_id = True
 
-instance1.run(tactic="random")
+                    next_box_pick_id = boxes[next_box_pick_id]
+
+                pass
+            case _:
+                print(f"Tactic ({tactic}) is not a valid tactic!")
+
+        results.append({
+            "id": id,
+            "found_id": found_id
+        })
+
+    return results
